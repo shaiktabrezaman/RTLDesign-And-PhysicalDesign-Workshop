@@ -25,8 +25,6 @@ A packaged chip is built up in layers: the outermost **pads** are where external
 
 The pad-level view for a real chip shows how different peripheral interfaces (I2C, QSPI, UART, JTAG, GPIO, ADC, power/ground) are grouped and routed around the edge of the die before reaching the core.
 
-*(image: peripheral / pad connection diagram)*
-
 The same chip, redrawn to explicitly label the **die**, **PADS**, and **core** regions.
 
 <img width="1033" height="543" alt="image" src="https://github.com/user-attachments/assets/209a6b32-fa1d-42b2-b962-d1a79a258d5d" />
