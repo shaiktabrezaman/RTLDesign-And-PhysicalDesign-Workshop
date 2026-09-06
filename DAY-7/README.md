@@ -220,7 +220,8 @@ The run's fully expanded `config.tcl` confirms `FP_CORE_UTIL` actually took the 
 The floorplan DEF (together with the merged LEF) can be opened directly in Magic to see it visually.
 
 ```bash
-magic -T /path/to/sky130A.tech lef read merged.lef def read picorv32a.floorplan.def &
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+
 ```
 
 <img width="1920" height="983" alt="floorplan view through magic" src="https://github.com/user-attachments/assets/f48d0eee-9a8e-4ddb-af57-670cfd377db8" />
