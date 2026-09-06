@@ -220,7 +220,7 @@ The run's fully expanded `config.tcl` confirms `FP_CORE_UTIL` actually took the 
 The floorplan DEF (together with the merged LEF) can be opened directly in Magic to see it visually.
 
 ```bash
-magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def &
 
 ```
 
@@ -259,7 +259,7 @@ This runs global and detailed placement, followed by a resizing/optimization pas
 The new `results/placement/picorv32a.placement.def` can be opened the same way the floorplan was, this time showing the fully placed design.
 
 ```bash
-magic -T /path/to/sky130A.tech lef read merged.lef def read picorv32a.placement.def &
+magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &
 ```
 
 <img width="1920" height="983" alt="run placement magic layout cmd" src="https://github.com/user-attachments/assets/4cc30dba-9f40-4788-bc75-82c1dfc1499e" />
