@@ -123,6 +123,18 @@ grid 0.46um 0.34um 0.23um 0.46um
 ```
 This aligns the view grid to the actual routing grid, so placed geometry lines up with valid track positions.
  
+ 
+<img width="1920" height="983" alt="open magic cmd" src="https://github.com/user-attachments/assets/cf15b2ea-a223-421f-8a4e-c9a6914acb50" />
+<img width="1920" height="983" alt="inverter layout" src="https://github.com/user-attachments/assets/727c6b53-c925-4537-a570-a8d947f29f34" />
+<img width="1920" height="983" alt="tracks info filw" src="https://github.com/user-attachments/assets/2c64f797-9bfb-45b3-8464-d71f2de84b84" />
+<img width="1920" height="983" alt="to open tracks info cmd and its path" src="https://github.com/user-attachments/assets/c720b99b-fe34-4452-b175-5b873e17fc11" />
+<img width="1920" height="983" alt="taken li1 tracks on grid and how layout grid changes to the the size" src="https://github.com/user-attachments/assets/fabf720a-4fae-403e-b025-1a2898dab84c" />
+<img width="1920" height="983" alt="u can see the intersection of horizontal and vertical tracks placed for routing" src="https://github.com/user-attachments/assets/20069292-1329-473d-842f-2c9903fe8568" />
+<img width="1920" height="983" alt="width covers 3 boxes ( 2boxes and half half on ends)" src="https://github.com/user-attachments/assets/4c23ca81-9123-4587-bd17-bd5569fbd32d" />
+<img width="1920" height="983" alt="vetical boxes length" src="https://github.com/user-attachments/assets/adfad48b-4e92-40b8-9848-dc3be29b052d" />
+
+---
+ 
 ### Lab 2: Building and Labeling a Custom Standard Cell (sky130_vsdinv)
  
 - Zoom into the inverter layout to inspect the `A` (input) and `Y` (output) diffusion/poly regions, along with `VPWR`/`VGND` rails.
@@ -145,6 +157,12 @@ This aligns the view grid to the actual routing grid, so placed geometry lines u
   save sky130_vsdinv.mag
 ```
  
+ <img width="1920" height="983" alt="we can label the ports" src="https://github.com/user-attachments/assets/4f1e558a-d044-4b1b-9ab9-83a04acb1a52" />
+<img width="1920" height="983" alt="port class name set and use declaration" src="https://github.com/user-attachments/assets/55390dca-a0a7-4672-a9e3-5e1107c9e8df" />
+<img width="1920" height="983" alt="saving as sky130_vsdinv mag" src="https://github.com/user-attachments/assets/575a3d59-3f33-4d2c-b128-cdffb9142be0" />
+<img width="1920" height="983" alt="successfully saved as sky130_vsdinv mag" src="https://github.com/user-attachments/assets/f7518d73-b2c9-4878-a738-1378729441a9" />
+---
+ 
 ### Lab 3: Generating a LEF from the Custom Cell
  
 With the saved `sky130_vsdinv.mag` cell loaded, generate the abstract LEF view from the tkcon console:
@@ -158,6 +176,10 @@ Verify the file was written:
 ls -ltr
 # sky130_vsdinv.mag  (2716 bytes)
 ```
+ <img width="1920" height="983" alt="using write lef cmd to create a lef file" src="https://github.com/user-attachments/assets/c4f95a24-01d8-4a1f-8a48-a212eb6642cf" />
+<img width="1920" height="983" alt="created a lef file using lef write cmd and this is the file" src="https://github.com/user-attachments/assets/43ddedae-ee7d-401f-96b0-ff4978ee01ba" />
+
+---
  
 ### Lab 4: Integrating the Custom Cell into the picorv32a Design
  
@@ -181,6 +203,15 @@ set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc
  
 set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
 ```
+ 
+<img width="1920" height="983" alt="copied lef file into picorv32a" src="https://github.com/user-attachments/assets/b68c7dca-0f82-47fc-bc9d-c527a18181f0" />
+<img width="1920" height="983" alt="typical file" src="https://github.com/user-attachments/assets/ea826eb8-ad28-4f63-a2ad-5afdd7ea4ae4" />
+<img width="1920" height="983" alt="slow_lib file" src="https://github.com/user-attachments/assets/13470ae3-ee28-4629-afb8-36793ef6b580" />
+<img width="1920" height="983" alt="fast_lib file" src="https://github.com/user-attachments/assets/d150eb3b-7e0c-4644-a06a-c2e87366421b" />
+<img width="1920" height="983" alt="successfully copied lib files into picorv32a" src="https://github.com/user-attachments/assets/fdd6f3ff-ccf8-4f7e-b14b-3450cae453e8" />
+<img width="1920" height="983" alt="modified config tcl " src="https://github.com/user-attachments/assets/a1e6e7d8-afc8-4984-95c9-71ed88ebeb0f" />
+
+---
  
 ### Lab 5: Running OpenLane Flow (Prep + Synthesis) with the Custom Cell
  
@@ -220,6 +251,13 @@ wns -23.89
 ```
 1554 instances of the custom inverter cell were inferred into the synthesized netlist.
  
+<img width="1920" height="983" alt="docker cmds" src="https://github.com/user-attachments/assets/024c5110-2348-4910-90e4-ca82c2032ce5" />
+<img width="1920" height="983" alt="prep complete" src="https://github.com/user-attachments/assets/67fd989a-4dc2-4b99-bc6b-b041644b738f" />
+<img width="1920" height="983" alt="1554 vsdinv cells are used in picorv32a" src="https://github.com/user-attachments/assets/837ab6ee-d8d0-48df-b0bb-1101e1a4181f" />
+<img width="1920" height="983" alt="synthesis completed" src="https://github.com/user-attachments/assets/412bc52b-88bf-46e6-a6e1-7f0505cdac9b" />
+
+---
+ 
 ### Lab 6: Inspecting Synthesis Strategy Variables (Trying to Reduce Negative Slack)
  
 From the interactive flow shell, inspect and tweak synthesis strategy environment variables to influence WNS/TNS:
@@ -236,6 +274,11 @@ AREA 0
 sky130_fd_sc_hd__inv_8
 ```
 These control whether synthesis applies area-based or delay-based optimization, whether cell sizing/buffering is enabled, and which cell drives primary inputs — all of which affect the reported negative slack.
+ 
+
+<img width="1920" height="983" alt="trying to reduce the negative slack" src="https://github.com/user-attachments/assets/eb032599-fca7-449c-917e-681bbb6d2979" />
+
+---
  
 ### Lab 7: Running Placement
  
@@ -259,6 +302,10 @@ delta HPWL              2 %
 [INFO]: Taking a Screenshot of the Layout Using Klayout...
 ```
  
+<img width="1920" height="983" alt="run_placement finished" src="https://github.com/user-attachments/assets/bfad91cb-33bb-4262-a759-7fe029f9cd23" />
+ 
+---
+ 
 ### Lab 8: Viewing the Placed Layout in Magic
  
 Navigate to the placement results and open the DEF in Magic using the merged LEF:
@@ -269,6 +316,13 @@ magic -T /home/vsduser/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs
   def read picorv32a.placement.def
 ```
 This renders the full placed chip (dense standard-cell rows) — zooming in shows individual placed cells (e.g. `sky130_fd_sc_hd__o22a_1`, `sky130_fd_sc_hd__tapvpwrvgnd_1`) with instance names like `PHY_3136`, `_18745_`.
+ 
+<img width="1920" height="983" alt="magic run cmds after placement" src="https://github.com/user-attachments/assets/0903b39d-418a-4d80-acad-8afbf4db29f4" />
+<img width="1920" height="983" alt="placement layout" src="https://github.com/user-attachments/assets/1e9f3b05-fc50-4722-a32b-83b1e52caef6" />
+<img width="1920" height="983" alt="found vsdinv cells in picorv32a" src="https://github.com/user-attachments/assets/6bab3e09-02dd-4d62-9dcb-74fab2042db5" />
+
+
+---
  
 ### Lab 9: Pre-STA Timing Check and Creating a Base SDC
  
@@ -312,9 +366,21 @@ puts "\[INFO\]: Setting load to: $cap_load"
 set_load $cap_load [all_outputs]
 ```
  
-> More labs (proper CTS run, real-clock post-CTS setup/hold reports) are still pending and will be added here once completed.
- 
+<img width="1920" height="983" alt="pre_sta cong file runned" src="https://github.com/user-attachments/assets/d1940afd-d144-4134-92f4-7363f7b79d5a" />
+<img width="1920" height="983" alt="my_base sdc file created" src="https://github.com/user-attachments/assets/4ca9c8b1-c7e5-41cb-8323-cedb5f6efd47" />
+
 ---
+ 
+### Lab 10: Running Clock Tree Synthesis (CTS)
+ 
+*(To be filled in.)*
+ 
 
-
+---
+ 
+### Lab 11: Setup & Hold Analysis with Real Clock Network (Post-CTS)
+ 
+*(To be filled in.)*
+ 
+ 
 ---
