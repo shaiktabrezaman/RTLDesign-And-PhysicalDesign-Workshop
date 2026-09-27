@@ -122,6 +122,8 @@ crystal orientation is preferred because it produces a lower density of
 interface traps at the silicon–oxide boundary compared to other
 orientations, which matters for transistor performance.
 
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/953a361a-1874-4d16-8515-3df920358082" />
+
 ### 4.2 Creating the Active Region (Mask 1)
 
 A stack of ~40 nm SiO₂, ~80 nm Si₃N₄, and ~1 µm photoresist is deposited on
@@ -133,8 +135,7 @@ encroachment of oxide under the edge of the nitride mask, a well-known
 side-effect of this technique. The nitride layer is stripped afterward using
 hot phosphoric acid.
 
-<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/953a361a-1874-4d16-8515-3df920358082" />
-<img width="1920" height="1080" alt="8" src="https://github.com/user-attachments/assets/3694ecbb-c917-4087-b735-f1331d5cce10" />
+<img width="1920" height="1080" alt="2" src="https://github.com/user-attachments/assets/ddfe6b9e-19f3-4517-811d-de998b7ee8f5" />
 
 ### 4.3 N-Well and P-Well Formation (Mask 2)
 
@@ -146,12 +147,8 @@ diffusion** step in a furnace, which drives the implanted dopants deeper
 into the substrate and activates them, forming the finished N-well/P-well
 regions.
 
-<img width="1920" height="1080" alt="9" src="https://github.com/user-attachments/assets/8a77f115-ab59-48da-83fa-d56d39aa7e07" />
-<img width="1920" height="1080" alt="10" src="https://github.com/user-attachments/assets/eb32177d-1459-4e11-bdca-fab4be80289d" />
-
-
-> **Note:** the exact drive-in temperature wasn't confirmed against a slide
-> in this batch of screenshots — flagged as an open item below.
+<img width="1920" height="1080" alt="4" src="https://github.com/user-attachments/assets/4af1f527-d194-406e-8b67-2665d2199856" />
+<img width="1920" height="1080" alt="5" src="https://github.com/user-attachments/assets/4fa34611-6536-4b76-aad8-7a67c158b665" />
 
 ### 4.4 Gate Formation (Mask 6)
 
@@ -163,13 +160,8 @@ ahead of gate patterning. Polysilicon is deposited and doped n-type (to keep
 its resistance low), and Mask 6 defines and etches the final gate shape from
 that polysilicon layer.
 
-<img width="1920" height="1080" alt="11" src="https://github.com/user-attachments/assets/c03a4b2c-6d84-45da-b60b-48a004302286" />
-<img width="1920" height="980" alt="12" src="https://github.com/user-attachments/assets/ed28e2dd-0149-4b5b-9ee9-b162ca614d81" />
+<img width="1920" height="1080" alt="6" src="https://github.com/user-attachments/assets/2cc59149-f2c0-48a9-ba99-90a2b0f350ea" />
 
-
-> **Note:** the specific implant energies dictated (mask 4 ~60kV boron, mask
-> 5 arsenic) weren't independently confirmed against a slide in this batch —
-> flagged below.
 
 ### 4.5 Lightly Doped Drain (LDD) Formation (Masks 7 & 8)
 
@@ -190,7 +182,8 @@ and then anisotropically plasma-etched) are formed alongside the gate — these
 physically set back the heavier source/drain implant that follows, which is
 what creates the "lightly doped" grading at the drain edge.
 
-<img width="1920" height="998" alt="13" src="https://github.com/user-attachments/assets/61563921-29b2-4cbc-a3b1-6702a64b66d3" />
+<img width="1920" height="1080" alt="8" src="https://github.com/user-attachments/assets/3694ecbb-c917-4087-b735-f1331d5cce10" />
+
 
 ### 4.6 Source and Drain Formation (Masks 9 & 10)
 
@@ -200,11 +193,8 @@ side — form the full-strength source/drain regions, followed by a
 high-temperature furnace anneal to activate the dopants and repair implant
 damage.
 
-<img width="1920" height="986" alt="14" src="https://github.com/user-attachments/assets/be20a4ec-fd24-43a5-9bd5-d7cbc88d5d5a" />
+<img width="1920" height="1080" alt="9" src="https://github.com/user-attachments/assets/8a77f115-ab59-48da-83fa-d56d39aa7e07" />
 
-> **Note:** which mask number (9 vs. 10) pairs with which implant species
-> wasn't independently confirmed against a slide in this batch — flagged
-> below, as originally suspected in the dictation.
 
 ### 4.7 Local Interconnect / Contact Formation (Mask 11)
 
@@ -216,8 +206,10 @@ nitride (TiN)**, which is used specifically for **local interconnect** —
 short-range connections rather than full-chip routing. Mask 11 then defines
 where these local contacts/plugs are etched and filled.
 
-<img width="1920" height="1080" alt="4" src="https://github.com/user-attachments/assets/4af1f527-d194-406e-8b67-2665d2199856" />
-<img width="1920" height="1080" alt="5" src="https://github.com/user-attachments/assets/4fa34611-6536-4b76-aad8-7a67c158b665" />
+<img width="1920" height="1080" alt="10" src="https://github.com/user-attachments/assets/eb32177d-1459-4e11-bdca-fab4be80289d" />
+<img width="1920" height="1080" alt="11" src="https://github.com/user-attachments/assets/c03a4b2c-6d84-45da-b60b-48a004302286" />
+<img width="1920" height="980" alt="12" src="https://github.com/user-attachments/assets/ed28e2dd-0149-4b5b-9ee9-b162ca614d81" />
+<img width="1920" height="998" alt="13" src="https://github.com/user-attachments/assets/61563921-29b2-4cbc-a3b1-6702a64b66d3" />
 
 ### 4.8 Higher-Level Metal Formation (Mask 12 and beyond, through Mask 16)
 
@@ -239,8 +231,9 @@ The completed stack, from substrate to top metal, is what makes the finished
 device fabricable, with source, gate, and drain terminals of each transistor
 now accessible from outside the chip.
 
-<img width="1920" height="1080" alt="6" src="https://github.com/user-attachments/assets/2cc59149-f2c0-48a9-ba99-90a2b0f350ea" />
+
 <img width="1920" height="997" alt="Screenshot 2026-09-15 230644" src="https://github.com/user-attachments/assets/29717eb9-87d2-4ca3-aae4-ba9c671a99c5" />
+<img width="1920" height="986" alt="14" src="https://github.com/user-attachments/assets/be20a4ec-fd24-43a5-9bd5-d7cbc88d5d5a" />
 <img width="1920" height="997" alt="Screenshot 2026-09-15 230655" src="https://github.com/user-attachments/assets/e56836f3-a5d6-4f89-970c-66313407cc80" />
 
 
