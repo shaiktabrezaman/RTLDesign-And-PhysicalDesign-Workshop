@@ -139,4 +139,6 @@ This MST-based topology becomes the skeleton that the detailed maze-search/track
 ---
 
 ## Conclusion
+Day 10 completed the physical-design flow by moving from placement into detailed routing and post-route sign-off. Lee's algorithm gave the conceptual basis for maze routing, and DRC rules defined the manufacturing constraints every routed shape must satisfy. TritonRoute builds on these fundamentals — honoring pre-processed route guides, enforcing inter-guide connectivity, and using intra-layer parallel / inter-layer sequential panel routing to detail-route efficiently while staying DRC-clean. Its topology algorithm (MST over access-point clusters) then decides the lowest-cost connection skeleton for each net before final geometry is generated.
 
+Alongside the theory, this module's labs cover building the power distribution network (PDN), from the core power ring and power straps down to the standard-cell power rails, followed by the routing stages. Lab steps and results will be added as they are completed. Currently, I am stuck on the last two labs of Module 4, and this README will be updated.
