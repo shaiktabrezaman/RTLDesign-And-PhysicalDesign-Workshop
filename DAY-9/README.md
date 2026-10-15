@@ -371,16 +371,3 @@ set_load $cap_load [all_outputs]
 
 ---
  
-### Lab 10: Running Clock Tree Synthesis (CTS)
- 
-*(To be filled in.)*
- 
-
----
- 
-### Lab 11: Setup & Hold Analysis with Real Clock Network (Post-CTS)
- 
-*(To be filled in.)*
- 
- 
----
