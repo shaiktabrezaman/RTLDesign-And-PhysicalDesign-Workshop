@@ -1,11 +1,19 @@
 # VSDBabySoC — RTL Simulation, Synthesis, Gate-Level Simulation, STA and Physical Design
- 
+
 ## Overview
- 
-This folder documents the functional verification flow carried out on **VSDBabySoC**, a small SoC built around the `rvmyth` RISC-V core along with an analog PLL (`avsdpll`) and DAC (`avsddac`). The flow followed here is: clone the design, run RTL simulation, synthesize it in Yosys against the SKY130 standard-cell library, inspect the resulting netlist, run gate-level simulation (GLS) on that netlist, and finally compare the RTL and GLS waveforms to confirm they match.
- 
-Part 2 of this README continues from the synthesized netlist into **static timing analysis (OpenSTA)** across 16 PVT corners and the **physical design flow** (OpenROAD) up to GDSII.
- 
+
+This repository documents the complete flow carried out on **VSDBabySoC**, a small SoC built around the `rvmyth` RISC-V core along with an analog PLL (`avsdpll`) and DAC (`avsddac`).
+
+The work is split into two parts:
+
+**Part 1 — RTL to GLS.** Clone the design, run RTL simulation, synthesize it in Yosys against the SKY130 standard-cell library, inspect the resulting netlist, run gate-level simulation (GLS) on that netlist, and compare the RTL and GLS waveforms to confirm they match.
+
+**Part 2 — Static Timing Analysis and Physical Design.** Continue from the synthesized netlist into:
+- **Static timing analysis (OpenSTA)** across 16 PVT corners on the synthesized netlist.
+- **Physical design (OpenROAD-flow-scripts, sky130hd)** through floorplan, placement, CTS, global routing and detailed routing, producing a routed layout (`6_final.odb`) and extracted parasitics (`6_final.spef`).
+- **Congestion debugging:** global routing initially failed with `GRT-0116`. The issue was fixed by editing the `avsddac` macro LEF and setting `ROUTING_LAYER_ADJUSTMENT = 0.3` and `GLOBAL_ROUTE_ARGS = -allow_congestion` in `config.mk`.
+- **Post-route STA** across the same 16 PVT corners using the routed database and SPEF, compared against the pre-route results.
+
 <p align="center">
   <img width="601" height="332" alt="VSDBabySoC" src="https://github.com/user-attachments/assets/21bffbe6-56b3-4b3c-a8b4-f26b8e32911c" />
 </p>
@@ -13,9 +21,10 @@ Part 2 of this README continues from the synthesized netlist into **static timin
   <sub>Source: VLSI System Design (VSD)</sub>
 </p>
 
- 
+---
+
 ## Contents
- 
+
 **Part 1 — RTL to GLS**
 - [1. Setting Up the Project Folder](#1-setting-up-the-project-folder)
 - [2. RTL and Testbench](#2-rtl-and-testbench)
@@ -24,13 +33,23 @@ Part 2 of this README continues from the synthesized netlist into **static timin
 - [5. Netlist Views](#5-netlist-views)
 - [6. Gate-Level Simulation (GLS)](#6-gate-level-simulation-gls)
 - [7. RTL vs GLS Comparison](#7-rtl-vs-gls-comparison)
-- [8. Conclusion (RTL to GLS)](#8-conclusion-rtl-to-gls)
+- [8. Conclusion (RTL to GLS)](#8-conclusion)
+
 **Part 2 — Static Timing Analysis and Physical Design**
 - [9. Static Timing Analysis Using OpenSTA](#9-static-timing-analysis-using-opensta)
 - [10. STA on VSDBabySoC](#10-sta-on-vsdbabysoc)
 - [11. PVT Corner-Based STA (16 Corners)](#11-pvt-corner-based-sta-16-corners)
 - [12. Physical Design Flow (OpenROAD)](#12-physical-design-flow-openroad)
+  - [12.1 Flow Overview](#121-flow-overview)
+  - [12.2 Environment Setup (Codespaces)](#122-environment-setup-codespaces)
+  - [12.3 Running the Flow](#123-running-the-flow)
+  - [12.4 Issue: Global Routing Congestion (GRT-0116)](#124-issue-global-routing-congestion-grt-0116)
+  - [12.5 Final Routed Layout](#125-final-routed-layout)
+  - [12.6 Post-Route Static Timing Analysis (16 PVT Corners)](#126-post-route-static-timing-analysis-16-pvt-corners)
+  - [12.7 Conclusion](#127-conclusion)
+
 ---
+
 
 ## 1. Setting Up the Project Folder
 
@@ -314,7 +333,7 @@ The `RV_TO_DAC[9:0]` bus, `CLK`, `reset`, and `OUT` were compared between `pre_s
 ## 8. Conclusion
 
 The BabySoC design was taken through the complete verification loop, covering RTL simulation, Yosys synthesis onto the SKY130 library, netlist inspection, and gate-level simulation. The RTL and GLS waveforms matched exactly on the `RV_TO_DAC` bus and other observed signals. This confirms that synthesis preserved the intended functional behavior of the design with no mismatch introduced during the RTL-to-gate-level translation.
----
+
 ---
 
 # Part 2 — Static Timing Analysis and Physical Design
@@ -636,14 +655,15 @@ For every corner the worst hold (MIN) path was reported. In all 16 corners the s
 
  
 ### 11.6 PVT Comparison Table
- 
+
 Values are taken from the final comparison table printed by the script.
- 
+
 - **MIN SLACK** = worst hold slack
 - **MAX SLACK** = worst setup slack
 - **WNS** = worst negative setup slack
 - **TNS** = total negative setup slack
 - **STATUS** = MET if WNS ≥ 0, otherwise VIOLATED
+
 | Corner | Min Slack | Max Slack | WNS | TNS | Status |
 |---|---:|---:|---:|---:|---|
 | FF_100C_1v65 | 0.249 | 4.055 | 0.000 | 0.000 | MET |
@@ -702,5 +722,227 @@ Worst hold slack is positive at all 16 corners, from 0.187 (FF_n40C_1v95) to 1.8
 ---
  
 ## 12. Physical Design Flow (OpenROAD)
- 
-*To be added: moving to the `VSDPD` Codespace and running the OpenROAD flow scripts through the `flow` file: synthesis, floorplan, placement, CTS, global routing (congestion issue and its fix), final routing, post-route STA and the final GDSII layout.*
+
+This section takes the synthesized netlist of **VSDBabySoC** through the complete physical design flow using **OpenROAD-flow-scripts (ORFS)** on the **sky130hd** platform, running inside GitHub Codespaces. The flow runs from floorplan to a routed, parasitic-extracted layout (`6_final.odb`, `6_final.spef`), followed by post-route STA across 16 PVT corners.
+
+The design contains the `rvmyth` core and two analog hard macros, `avsdpll` (PLL) and `avsddac` (DAC). The macros are integrated through their `.lef` and `.lib` files.
+
+---
+
+### 12.1 Flow Overview
+
+```
+Synthesis ──► 2_floorplan ──► 3_place ──► 4_cts ──► 5_route ──► 6_final ──► Post-route STA
+ (Yosys)     (macro place,   (global +    (clock     (global +    (GDS,       (16 PVT corners)
+              PDN, tap)       detailed)    tree)      detailed)   SPEF)
+```
+
+| Stage | ORFS output | Purpose |
+|---|---|---|
+| Floorplan | `2_floorplan.odb` | Die/core size, macro placement, power grid |
+| Placement | `3_place.odb` | Global placement, resizing, detailed placement |
+| CTS | `4_cts.odb` | Clock tree synthesis, hold/setup repair |
+| Global route | `5_1_grt.odb` | Routing guides, congestion estimate |
+| Detailed route | `5_route.odb` | Actual metal routing, DRC clean-up |
+| Final | `6_final.odb`, `6_final.spef`, GDS | Final database and extracted parasitics |
+
+---
+
+### 12.2 Environment Setup (Codespaces)
+
+The flow runs in a Codespace with a VNC desktop, so the OpenROAD GUI can be opened in the browser (noVNC).
+
+```bash
+cd ~/Desktop/OpenROAD-flow-scripts/flow
+ls designs/sky130hd/vsdbabysoc/
+```
+
+The design directory holds:
+
+```
+designs/sky130hd/vsdbabysoc/
+├── config.mk                  # flow configuration
+├── config.tcl
+├── vsdbabysoc_synthesis.sdc   # constraints
+├── lef/   (avsddac.lef, avsdpll.lef)
+├── lib/   (avsddac.lib, avsdpll.lib)
+└── ...
+```
+
+
+---
+
+### 12.3 Running the Flow
+
+```bash
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk
+```
+
+To run stage by stage and inspect each result:
+
+```bash
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk floorplan
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk place
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk cts
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk route
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk final
+```
+
+Open any stage in the GUI:
+
+```bash
+make DESIGN_CONFIG=./designs/sky130hd/vsdbabysoc/config.mk gui_final
+```
+
+**CTS settings used in `config.mk`:**
+
+```make
+# CTS tuning
+export CTS_BUF_DISTANCE   = 600
+export SKIP_GATE_CLONING  = 1
+```
+
+The CTS result is shown below, with the clock-sink heat map concentrated around the core logic and the `dac` macro in the lower part of the die.
+
+<img width="1920" height="1080" alt="Screenshot 2026-10-03 115448" src="https://github.com/user-attachments/assets/986c2686-0c69-4c59-8b76-cf45fdf4c85c" />
+
+---
+
+### 12.4 Issue: Global Routing Congestion (GRT-0116)
+
+#### Symptom
+
+Global routing failed with:
+
+```
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+Error: global_route.tcl, 188 GRT-0116
+make[1]: *** [Makefile:617: do-5_1_grt] Error 1
+```
+
+The final congestion report showed overflow on only one layer:
+
+| Layer | Usage (%) | Max H / Max V / Total Overflow |
+|---|---|---|
+| met1 | 1.67 | 0 / 0 / 0 |
+| met2 | 2.01 | 0 / 0 / 0 |
+| met3 | 0.53 | 0 / 0 / 0 |
+| met4 | 0.98 | 0 / 0 / 0 |
+| **met5** | 0.02 | **1 / 0 / 2** |
+| **Total** | 1.40 | **1 / 0 / 2** |
+
+Overall usage was very low (1.40%). The failure came from a tiny overflow (total 2) on `met5`, not from general congestion. This pointed to a local problem around the `avsddac` macro and not to a lack of routing resources across the die.
+
+#### Fix
+
+Two changes were made.
+
+**1. `avsddac.lef`** — the macro's obstruction (`OBS`) and pin geometry were edited. The final macro (`SIZE 1193.570 BY 562.310`) has obstructions on `li1`, `met1`, `met2`, `met3` and `met4`, and the power pin `VPWR` is exposed on `met4`/`met5`.
+
+> **TODO (fill in before publishing):** state exactly what changed in the LEF, for example which layer's OBS was removed or resized. Add a before/after of the `OBS` block.
+
+**2. `config.mk`** — two routing settings were added:
+
+```make
+ROUTING_LAYER_ADJUSTMENT = 0.3
+export GLOBAL_ROUTE_ARGS = -allow_congestion
+```
+
+| Setting | Effect |
+|---|---|
+| `ROUTING_LAYER_ADJUSTMENT = 0.3` | Reduces available routing capacity on each layer by 30%, so the global router spreads wires and leaves headroom for detailed routing |
+| `GLOBAL_ROUTE_ARGS = -allow_congestion` | Lets global routing finish and write its result even when residual overflow remains, so the flow can continue to detailed routing |
+
+An alternative that was considered is lowering `CORE_UTILIZATION` to give more whitespace. It is left commented out in `config.mk`:
+
+```make
+# export CORE_UTILIZATION=0.1  # Reduce this value to allow more whitespace for routing.
+```
+
+<img width="1456" height="819" alt="image" src="https://github.com/user-attachments/assets/07eceb55-f61c-44cc-b545-6df16b38929a" />
+<img width="1568" height="674" alt="image" src="https://github.com/user-attachments/assets/fd5e1696-26f5-4789-ba57-5147ed2ff578" />
+<img width="1568" height="436" alt="image" src="https://github.com/user-attachments/assets/f78216c7-88e7-4c0a-9635-c64c2c411ae9" />
+
+
+---
+
+### 12.5 Final Routed Layout
+
+After the fix, global and detailed routing both completed. The final layout contains the routed standard-cell logic and the `dac` macro.
+
+Routing statistics from the global router:
+
+| Metric | Value |
+|---|---|
+| Routed nets | 6379 |
+| Total wirelength | 334256 µm |
+| Final number of vias | 48218 |
+| Final 3D usage | 177398 |
+
+Opening the final database in the GUI (`make ... gui_final`) and enabling only `met1`–`met4` and `met5` in Display Control shows the routing structure: horizontal `met1` power rails, `met2`/`met4` vertical routing, and the `met5` power stripes running over the macro.
+
+<img width="1456" height="819" alt="image" src="https://github.com/user-attachments/assets/37821f6f-fec4-4f6a-97ac-86c8c09c2198" />
+
+---
+
+### 12.6 Post-Route Static Timing Analysis (16 PVT Corners)
+
+Post-route STA was run in OpenROAD (OpenSTA) using:
+
+| Input | File |
+|---|---|
+| Database | `6_final.odb` |
+| Parasitics | `6_final.spef` |
+| Constraints | `vsdbabysoc_synthesis.sdc` |
+| Libraries | 16 `sky130_fd_sc_hd__*.lib` corner files in `designs/sky130hd/post_route/` |
+
+A Tcl driver (`designs/sky130hd/post_route/run.tcl`) discovers every Liberty file, runs one OpenROAD process per corner, and writes per-corner `.rpt`/`.log` files plus `summary.rpt`, `summary.csv` and `all_corners.rpt` to `post_route/reports/`.
+
+```bash
+cd ~/Desktop/OpenROAD-flow-scripts/flow
+openroad -no_splash -exit designs/sky130hd/post_route/run.tcl
+```
+
+The run finished with **16 libraries discovered, 16 completed, 0 failed**.
+
+#### Results
+
+| Corner | Setup WS (ns) | Setup WNS | Setup TNS | Hold WS (ns) | Hold WNS / TNS |
+|---|---|---|---|---|---|
+| ff_100C_1v65 | 8.196 | 0 | 0 | 0.259 | 0 / 0 |
+| ff_100C_1v95 | 9.059 | 0 | 0 | 0.205 | 0 / 0 |
+| ff_n40C_1v56 | 7.052 | 0 | 0 | 0.303 | 0 / 0 |
+| ff_n40C_1v65 | 7.758 | 0 | 0 | 0.267 | 0 / 0 |
+| ff_n40C_1v76 | 8.384 | 0 | 0 | 0.235 | 0 / 0 |
+| ff_n40C_1v95 | 9.072 | 0 | 0 | 0.198 | 0 / 0 |
+| ss_100C_1v40 | **-3.310** | -3.310 | -188.345 | 0.922 | 0 / 0 |
+| ss_100C_1v60 | 1.754 | 0 | 0 | 0.653 | 0 / 0 |
+| ss_n40C_1v28 | **-28.657** | -28.657 | -13598.716 | 1.836 | 0 / 0 |
+| ss_n40C_1v35 | **-15.829** | -15.829 | -5921.846 | 1.361 | 0 / 0 |
+| ss_n40C_1v40 | **-10.325** | -10.325 | -2880.216 | 1.140 | 0 / 0 |
+| ss_n40C_1v44 | **-7.159** | -7.159 | -1573.228 | 1.000 | 0 / 0 |
+| ss_n40C_1v60 | 0.197 | 0 | 0 | 0.673 | 0 / 0 |
+| ss_n40C_1v76 | 3.618 | 0 | 0 | 0.502 | 0 / 0 |
+| tt_025C_1v80 | 7.031 | 0 | 0 | 0.321 | 0 / 0 |
+| tt_100C_1v80 | 7.108 | 0 | 0 | 0.326 | 0 / 0 |
+
+The `Status = OK` column in `summary.rpt` means the run for that corner completed. It does not mean timing was met.
+
+#### Observations
+
+- **Hold timing is met at all 16 corners.** Hold WS ranges from 0.198 ns (`ff_n40C_1v95`) to 1.836 ns (`ss_n40C_1v28`). The tightest hold paths are at the fast corners, as expected.
+- **Setup is met at all FF and TT corners**, with 7.0 to 9.1 ns of slack against the 12 ns clock period.
+- **Setup is met at three SS corners** (`ss_100C_1v60`, `ss_n40C_1v60`, `ss_n40C_1v76`). `ss_n40C_1v60` has only 0.197 ns of margin.
+- **Setup is violated at five SS corners** (`ss_100C_1v40`, `ss_n40C_1v28`, `ss_n40C_1v35`, `ss_n40C_1v40`, `ss_n40C_1v44`). The worst is `ss_n40C_1v28` with WNS of -28.657 ns and TNS of -13598.716 ns.
+- Violations grow as supply voltage drops (1v60 → 1v44 → 1v40 → 1v35 → 1v28 at -40 °C). Gate delay rises sharply at low voltage, so the same logic depth takes much longer.
+- **The critical paths are stable:** setup paths run from `core.CPU_src1_value_a3[14]` (FF/TT-low corners) or `core.CPU_src2_value_a3[7]` (SS corners) to `core.CPU_Xreg_value_a4[...]` registers, passing through a half adder, an `or4`/`a21oi`/`o2111ai` chain and a `mux2`. Hold paths are register-to-register (`CPU_rd_a4[1]` → `CPU_rd_a5[1]`, `CPU_reset_a2` → `CPU_reset_a3`).
+
+<img width="1004" height="388" alt="image" src="https://github.com/user-attachments/assets/7fe46346-fbcd-4b5e-9ecb-f375bacf075a" />
+
+---
+
+### 12.7 Conclusion
+
+The VSDBabySoC physical design flow was completed on sky130hd from floorplan to a routed, SPEF-extracted layout. Global routing initially failed with GRT-0116 because of a very small overflow (total 2) on `met5`, even though overall utilization was 1.40%. The issue was resolved by editing the `avsddac` macro LEF and setting `ROUTING_LAYER_ADJUSTMENT = 0.3` and `GLOBAL_ROUTE_ARGS = -allow_congestion` in `config.mk`.
+
+Post-route STA across 16 PVT corners shows hold met everywhere and setup met at the FF, TT and three of the SS corners. Setup violations remain at five low-voltage SS corners. No timing fixes were applied as part of this work, so the next step would be timing optimization (for example, tighter synthesis constraints, restructuring the critical `Xreg` write path, or a relaxed clock period for the low-voltage corners).
